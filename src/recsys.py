@@ -1,7 +1,7 @@
 import pandas as pd
 import mxnet as mx
 import numpy as np
-import os
+# import os
 import glob
 import gensim
 from gensim.utils import simple_preprocess
@@ -58,33 +58,28 @@ class PreprocessText():
 
 		return texts_out
 
+def get_recommendations(df_articles, article_idx, mx_mat, n_recs=10):
+    """
+    Request top N article recommendations.
 
-class Predict:
-	
-	def __init__(self):
-		self.n_recs = 10
+    INPUT
+        df_articles: Pandas DataFrame containing all articles.
+        user_id: User ID being provided matches.
+        mx_mat: MXNet cosine similarity matrix
+    OUTPUT
+        Pandas DataFrame of top N article recommendations.
+    """
 
-	def get_recommendations(self, df_articles, article_idx, mx_mat):
-		"""
-		Request top N article recommendations.
+    # user_idx = article_idx
 
-		INPUT
-			df_articles: Pandas DataFrame containing all articles.
-			user_id: User ID being provided matches.
-			mx_mat: MXNet cosine similarity matrix
-		OUTPUT
-			Pandas DataFrame of top N article recommendations.
-		"""
+    article_sims = mx_mat[article_idx].asnumpy()
+    article_recs = np.argsort(-article_sims)[:n_recs + 1]
 
-		# user_idx = article_idx
+    # Top recommendations
+    df_recs = df_articles.loc[list(article_recs)]
+    df_recs["similarity"] = article_sims[article_recs]
 
-		article_sims = mx_mat[article_idx].asnumpy()
-		article_recs = np.argsort(-article_sims)[:self.n_recs + 1]
-
-		# Top recommendations
-		df_recs = df_articles["title"].loc[list(article_recs)].tolist()
-
-		return df_recs
+    return df_recs
 
 if __name__ == '__main__':
 
@@ -103,7 +98,7 @@ if __name__ == '__main__':
 	tf = TfidfVectorizer(analyzer="word",
 						ngram_range=(1, 3),
 						min_df=2,
-						stop_words=["english"])
+						stop_words="english")
 
 	# Create TF-IDF Matrix
 	mx_tfidf = tf.fit_transform(articles["content"])
@@ -114,9 +109,7 @@ if __name__ == '__main__':
 	# Compute cosine similarities via dot product
 	mx_recsys = mx.nd.sparse.dot(mx_tfidf, mx_tfidf.T)
 
-	predict = Predict()
-
-	article_recs = predict.get_recommendations(df_articles = articles,
-		article_idx = 3, mx_mat = mx_recsys)
+	article_recs = get_recommendations(df_articles = articles,
+		article_idx = 3, mx_mat = mx_recsys, n_recs=10)
 
 	pprint(article_recs)
