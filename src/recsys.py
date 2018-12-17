@@ -91,10 +91,6 @@ if __name__ == '__main__':
 
 	articles = articles.head(1000)
 
-	# prep = PreprocessText()
-	# articles["articles_lemmatized"] = prep.lemmatization(articles["content"].values)
-	# articles["articles_bigrams"] = prep.make_bigrams(articles["articles_lemmatized"].values)
-
 	tf = TfidfVectorizer(analyzer="word",
 						ngram_range=(1, 3),
 						min_df=2,
@@ -113,3 +109,21 @@ if __name__ == '__main__':
 		article_idx = 3, mx_mat = mx_recsys, n_recs=10)
 
 	pprint(article_recs)
+
+	"""
+	PROCESS ENTIRE DATASET
+	"""
+
+	prep = PreprocessText()
+
+	# Lemmatize articles
+	articles["articles_lemmatized"] = prep.lemmatization(articles["content"].values)
+
+	# Convert each article from a list of strings to single string
+	articles["articles_lemmatized"] = articles["articles_lemmatized"].apply(" ".join)
+
+	tfidf_matrix = tf.fit_transform(articles["articles_lemmatized"])
+
+	mx_tfidf = mx.nd.sparse.array(tfidf_matrix, ctx=mx.cpu())
+
+	mx_recsys = mx.nd.sparse.dot(mx_tfidf, mx_tfidf.T)
