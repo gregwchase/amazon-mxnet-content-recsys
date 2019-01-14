@@ -86,8 +86,10 @@ if __name__ == '__main__':
 	file_path = "../data/"
 	all_files = glob.glob(file_path + "*.csv")
 
-	articles = pd.concat((pd.read_csv(
-		f, usecols=["id", "title", "publication", "content"]) for f in all_files))
+	extract_features = lambda f : pd.read_csv(f, usecols = ["id", "title", "publication", "content"])
+
+	# Concatenate features across all files into single DataFrame
+	articles = pd.concat((extract_features(f) for f in all_files))
 
 	articles = articles.head(1000)
 
