@@ -93,7 +93,7 @@ if __name__ == '__main__':
 
 	tf = TfidfVectorizer(analyzer="word",
 						ngram_range=(1, 3),
-						min_df=2,
+						min_df=0.2, # ignore terms with document frequency lower than 0.2 (20%)
 						stop_words="english")
 
 	# Create TF-IDF Matrix
