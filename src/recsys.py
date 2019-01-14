@@ -70,13 +70,12 @@ def get_recommendations(df_articles, article_idx, mx_mat, n_recs=10):
         Pandas DataFrame of top N article recommendations.
     """
 
-    # user_idx = article_idx
-
+	# Similarity and recommendations
     article_sims = mx_mat[article_idx].asnumpy()
-    article_recs = np.argsort(-article_sims)[:n_recs + 1]
+    article_recs = np.argsort(-article_sims).tolist()[:n_recs + 1]
 
     # Top recommendations
-    df_recs = df_articles.loc[list(article_recs)]
+    df_recs = df_articles.iloc[article_recs]
     df_recs["similarity"] = article_sims[article_recs]
 
     return df_recs
