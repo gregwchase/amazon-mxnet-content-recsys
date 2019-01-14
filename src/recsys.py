@@ -1,15 +1,16 @@
-import pandas as pd
+import glob
+import re
+from pprint import pprint
+
+import gensim
 import mxnet as mx
 import numpy as np
-# import os
-import glob
-import gensim
-from gensim.utils import simple_preprocess
+import pandas as pd
 import spacy
-from spacy.lang.en.stop_words import STOP_WORDS
-import re
+from gensim.utils import simple_preprocess
 from sklearn.feature_extraction.text import TfidfVectorizer
-from pprint import pprint
+from spacy.lang.en.stop_words import STOP_WORDS
+
 
 class PreprocessText():
 
