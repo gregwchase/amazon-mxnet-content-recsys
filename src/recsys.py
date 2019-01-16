@@ -1,5 +1,4 @@
 import glob
-import re
 from pprint import pprint
 
 import mxnet as mx
@@ -10,7 +9,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from spacy.lang.en.stop_words import STOP_WORDS
 
 
-class PreprocessText():
+class PreprocessText:
 
 	def __init__(self):
 		self.additional_stop_words = {"-PRON-"}
@@ -48,44 +47,49 @@ class PreprocessText():
 
 		return texts_out
 
-def get_recommendations(df_articles, article_idx, mx_mat, n_recs=10):
-    """
-    Request top N article recommendations.
 
-    INPUT
-        df_articles: Pandas DataFrame containing all articles.
-        user_id: User ID being provided matches.
-        mx_mat: MXNet cosine similarity matrix
-    OUTPUT
-        Pandas DataFrame of top N article recommendations.
-    """
+def extract_features(f):
+	return pd.read_csv(f, usecols=["id", "title", "publication", "content"])
+
+
+def get_recommendations(df_articles, article_idx, mx_mat, n_recs=10):
+	"""
+	Request top N article recommendations.
+
+	INPUT
+		df_articles: Pandas DataFrame containing all articles.
+		user_id: User ID being provided matches.
+		mx_mat: MXNet cosine similarity matrix
+	OUTPUT
+		Pandas DataFrame of top N article recommendations.
+	"""
 
 	# Similarity and recommendations
-    article_sims = mx_mat[article_idx].asnumpy()
-    article_recs = np.argsort(-article_sims).tolist()[:n_recs + 1]
+	article_sims = mx_mat[article_idx].asnumpy()
+	article_recs = np.argsort(-article_sims).tolist()[:n_recs + 1]
 
-    # Top recommendations
-    df_recs = df_articles.iloc[article_recs]
-    df_recs["similarity"] = article_sims[article_recs]
+	# Top recommendations
+	df_recs = df_articles.iloc[article_recs]
+	df_recs["similarity"] = article_sims[article_recs]
 
-    return df_recs
+	return df_recs
+
 
 if __name__ == '__main__':
-
 	file_path = "../data/"
 	all_files = glob.glob(file_path + "*.csv")
-
-	extract_features = lambda f : pd.read_csv(f, usecols = ["id", "title", "publication", "content"])
 
 	# Concatenate features across all files into single DataFrame
 	articles = pd.concat((extract_features(f) for f in all_files))
 
+	# Subset the first 1000 rows
 	articles = articles.head(1000)
 
+	# Create TFIDF Vectorizer
 	tf = TfidfVectorizer(analyzer="word",
-						ngram_range=(1, 3),
-						min_df=0.2, # ignore terms with document frequency lower than 0.2 (20%)
-						stop_words="english")
+						 ngram_range=(1, 3),
+						 min_df=0.2,  # ignore terms with document frequency lower than 0.2 (20%)
+						 stop_words="english")
 
 	# Create TF-IDF Matrix
 	mx_tfidf = tf.fit_transform(articles["content"])
@@ -96,25 +100,8 @@ if __name__ == '__main__':
 	# Compute cosine similarities via dot product
 	mx_recsys = mx.nd.sparse.dot(mx_tfidf, mx_tfidf.T)
 
-	article_recs = get_recommendations(df_articles = articles,
-		article_idx = 3, mx_mat = mx_recsys, n_recs=10)
+	article_recs = get_recommendations(df_articles=articles,
+						article_idx=3, mx_mat=mx_recsys, n_recs=10)
 
 	pprint(article_recs)
 
-	"""
-	PROCESS ENTIRE DATASET
-	"""
-
-	prep = PreprocessText()
-
-	# Lemmatize articles
-	articles["articles_lemmatized"] = prep.lemmatization(articles["content"].values)
-
-	# Convert each article from a list of strings to single string
-	articles["articles_lemmatized"] = articles["articles_lemmatized"].apply(" ".join)
-
-	tfidf_matrix = tf.fit_transform(articles["articles_lemmatized"])
-
-	mx_tfidf = mx.nd.sparse.array(tfidf_matrix, ctx=mx.cpu())
-
-	mx_recsys = mx.nd.sparse.dot(mx_tfidf, mx_tfidf.T)
