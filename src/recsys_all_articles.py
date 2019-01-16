@@ -15,11 +15,12 @@ if __name__ == "__main__":
 	# Concatenate features across all files into single DataFrame
 	articles = pd.concat((extract_features(f) for f in all_files))
 
-	articles = articles.head(50000)
 
 	"""
-	PROCESS ENTIRE DATASET
+	PROCESS ENTIRE DATASET (start with first 50K rows)
 	"""
+
+	articles = articles.head(50000)
 
 	prep = PreprocessText()
 
