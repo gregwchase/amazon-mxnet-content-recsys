@@ -6,7 +6,6 @@ import mxnet as mx
 import numpy as np
 import pandas as pd
 import spacy
-from gensim.utils import simple_preprocess
 from sklearn.feature_extraction.text import TfidfVectorizer
 from spacy.lang.en.stop_words import STOP_WORDS
 
