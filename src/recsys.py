@@ -2,7 +2,6 @@ import glob
 import re
 from pprint import pprint
 
-import gensim
 import mxnet as mx
 import numpy as np
 import pandas as pd
@@ -17,15 +16,6 @@ class PreprocessText():
 	def __init__(self):
 		self.additional_stop_words = {"-PRON-"}
 		self.stop_words = set(STOP_WORDS.union(self.additional_stop_words))
-
-	def make_bigrams(self, texts):
-		"""
-		Create bigrams from documents.
-		Higher thresholds yield fewer phrases
-		"""
-		bigram = gensim.models.Phrases(texts, min_count=2, threshold=10)
-		bigram_mod = gensim.models.phrases.Phraser(bigram)
-		return [bigram_mod[doc] for doc in texts]
 
 	def lemmatization(self, texts, allowed_postags=["NOUN", "ADJ", "VERB", "ADV"]):
 		"""
