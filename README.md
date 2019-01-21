@@ -1,4 +1,4 @@
-# Content Based Filtering With MXNet
+# Content-Based Recommendation Systems with Apache MXNet
 
 This is the repository for the `Content-Based Recommendation Systems with Apache MXNet` article created for the [MXNet Medium blog](https://medium.com/apache-mxnet), in partnership with [Amazon](https://aws.amazon.com/mxnet/).
 
