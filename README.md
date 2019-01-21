@@ -4,7 +4,6 @@ This is the repository for the `Content Based Recommendation System` article cre
 
 ## Prerequisites
 
-* [Gensim](https://radimrehurek.com/gensim/install.html)
 * [Kaggle API](https://github.com/Kaggle/kaggle-api)
 * [SpaCy](https://spacy.io/usage/)
 
@@ -12,21 +11,12 @@ This is the repository for the `Content Based Recommendation System` article cre
 
 If the prerequisites aren't already installed, run the following commands.
 
-### _Gensim Installation_
+### _Libraries_
 
 ```markdown
-pip install gensim
-```
+Kaggle API - pip install kaggle
 
-### _Kaggle API Installation_
-
-```markdown
-pip install kaggle
-```
-
-### _SpaCy Installation_
-
-```markdown
+Spacy
 pip install -U spacy
 
 python -m spacy download en
@@ -36,7 +26,7 @@ python -m spacy download en_core_web_md
 
 ## Data
 
-* Articles via the Kaggle CLI
+* All news article data is downloaded via `download_articles.sh`.
 
 ### Download Data
 
