@@ -8,6 +8,21 @@ This is the repository for the `Content-Based Recommendation Systems with Apache
 * [MXNet](https://mxnet.apache.org/versions/master/install/index.html?platform=Linux&language=Python&processor=CPU)
 * [SpaCy](https://spacy.io/usage/)
 
+## Repo Tree & File Descriptions
+
+```markdown
+.
+├── data
+│   └── articles_first_1000.csv
+├── LICENSE
+├── README.md
+└── src
+    ├── Content-Based Recommendation System with MXNet.ipynb - Notebook for the first 1000 articles.
+    ├── download_articles.sh - Download all article data with the Kaggle API.
+    ├── recsys_all_articles.py - Create recommendation system with 50,000 articles.
+    └── recsys.py - Create recommendation system with first 1,000 articles.
+```
+
 ## Instructions - Library Installation
 
 If the prerequisites aren't already installed, run the following commands.
