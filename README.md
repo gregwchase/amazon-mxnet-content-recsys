@@ -39,6 +39,10 @@ You must have your Kaggle API credentials to proceed with the download!
 bash download_articles.sh
 ```
 
+### Run The Noteboook
+
+Launch the `Content-Based Recommendation System with MXNet` notebook to for building a recommendation system with the first 1000 articles.
+
 ## References
 
 [Amazon - Item to Item Collaborative Filtering](https://www.cs.umd.edu/~samir/498/Amazon-Recommendations.pdf)
