@@ -5,6 +5,7 @@ This is the repository for the `Content-Based Recommendation Systems with Apache
 ## Prerequisites
 
 * [Kaggle API](https://github.com/Kaggle/kaggle-api)
+* [MXNet](https://mxnet.apache.org/versions/master/install/index.html?platform=Linux&language=Python&processor=CPU)
 * [SpaCy](https://spacy.io/usage/)
 
 ## Instructions - Library Installation
@@ -15,6 +16,8 @@ If the prerequisites aren't already installed, run the following commands.
 
 ```markdown
 Kaggle API - pip install kaggle
+
+MXNet - pip install mxnet
 
 Spacy
 pip install -U spacy
